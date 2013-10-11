@@ -4,3 +4,5 @@ another stuff to master
 change for A and B
 random change
 change for B only
+
+stuff only in master
