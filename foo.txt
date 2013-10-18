@@ -11,3 +11,4 @@ another another from branch_fromlocal, going to local tag this
 
 post tag edit
 
+test rebase commit 1
