@@ -12,11 +12,34 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
+
+      # This job only runs for pull request comments
+    - name: PR comment
+      if: ${{ github.event.issue.pull_request }}
+      shell: bash
+      run: |
+        echo "Comment on PR #${{ github.event.issue.number }}"
+
+      # This job only runs for issue comments
+    - name: Issue comment
+      if: ${{ !github.event.issue.pull_request }}
+      shell: bash
+      run: |
+        echo "Comment on issue #${{ github.event.issue.number }}"
+
+    - name: Github context
+      shell: bash
+      run: |
+        echo action is ${{ github.action }}
+        echo "github context - ${{ toJSON(github) }}"
+
     - name: Get Payload Info
+      if: ${{ !github.event.issue.pull_request }}
       uses: Dovyski/payload-info-action@master
       id: payload
       with:
-        filter_pull_request: '(.head_commit.message | capture("Merge pull request #(?<pr>[[:digit:]]+)").pr)'
+        filter_pull_request: '.head_commit.message'
+        #filter_pull_request: '(.head_commit.message | capture("Merge pull request #(?<pr>[[:digit:]]+)").pr)'
 
     - name: Extract PR Info
       shell: bash
@@ -28,6 +51,12 @@ jobs:
         env | sort
         echo "-----------"
         echo payload is ${{ steps.payload.outputs.value }}
+        echo "p-----------"
+        echo ${{ github.event.issue.pull_request }}
+        echo "a-----------"
+        echo ${{ github.event.issue.action }}
+        echo "e-----------"
+        echo ${{ github.event }}
       id: extract_pr
 
     - name: Find Comment
