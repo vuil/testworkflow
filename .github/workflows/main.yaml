@@ -18,6 +18,9 @@ jobs:
         echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
         echo "##[set-output name=basebranch;]$(echo ${GITHUB_BASE_REF#refs/heads/})"
         echo "##[set-output name=prnum;]$(echo "$GITHUB_REF" | awk -F / '{print $3}')"
+        echo
+        env | sort
+        echo "-----------"
       id: extract_pr
 
     - name: Get Payload Info
