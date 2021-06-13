@@ -13,14 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-    #- name: Github context
-    #  shell: bash
-    #  run: |
-    #    echo action is ${{ github.action }}
-    #    echo "github context - ${{ toJSON(github) }}"
-
     - name: Get Payload Info
-      if: ${{ github.event_name != 'xpush' }}
       uses: Dovyski/payload-info-action@master
       id: payload
       with:
@@ -30,21 +23,18 @@ jobs:
     - name: Extract PR Info
       shell: bash
       run: |
-        export PRNUM=$(echo -e "${{ steps.payload.outputs.value }}")
-        echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-        echo "##[set-output name=basebranch;]$(echo ${GITHUB_BASE_REF#refs/heads/})"
         #echo ::set-output name=prnum::"$PRNUM"
         echo ::set-output name=prnum::${{ steps.payload.outputs.value }}
         echo
         env | sort
-        echo "-----------"
-        echo payload is ${{ steps.payload.outputs.value }}
-        echo "p-----------"
-        echo ${{ github.event.issue.pull_request }}
-        echo "a-----------"
-        echo ${{ github.event.issue.action }}
-        echo "e-----------"
-        echo ${{ github.event }}
+        #echo "-----------"
+        #echo payload is ${{ steps.payload.outputs.value }}
+        #echo "p-----------"
+        #echo ${{ github.event.issue.pull_request }}
+        #echo "a-----------"
+        #echo ${{ github.event.issue.action }}
+        #echo "e-----------"
+        #echo ${{ github.event }}
       id: extract_pr
 
     - name: Find Comment
