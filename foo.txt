@@ -1,8 +1,8 @@
-Added stuff to master
-another stuff to master
+Added stuff to main
+another stuff to main
 
 change for A and B
 random change
 change for B only
 
-stuff only in master
+stuff only in main
