@@ -13,20 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      # This job only runs for pull request comments
-    - name: PR comment
-      if: ${{ github.event.issue.pull_request }}
-      shell: bash
-      run: |
-        echo "Comment on PR #${{ github.event.issue.number }}"
-
-      # This job only runs for issue comments
-    - name: Issue comment
-      if: ${{ !github.event.issue.pull_request }}
-      shell: bash
-      run: |
-        echo "Comment on issue #${{ github.event.issue.number }}"
-
     - name: Github context
       shell: bash
       run: |
@@ -34,12 +20,12 @@ jobs:
         echo "github context - ${{ toJSON(github) }}"
 
     - name: Get Payload Info
-      if: ${{ !github.event.issue.pull_request }}
+      if: ${{ github.event_name != 'xpush' }}
       uses: Dovyski/payload-info-action@master
       id: payload
       with:
-        filter_pull_request: '.head_commit.message'
-        #filter_pull_request: '(.head_commit.message | capture("Merge pull request #(?<pr>[[:digit:]]+)").pr)'
+        filter_pull_request: '.number'
+        filter_push: '(.head_commit.message | capture("Merge pull request #(?<pr>[[:digit:]]+)").pr)'
 
     - name: Extract PR Info
       shell: bash
@@ -47,6 +33,11 @@ jobs:
         echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
         echo "##[set-output name=basebranch;]$(echo ${GITHUB_BASE_REF#refs/heads/})"
         echo "##[set-output name=prnum;]$(echo "$GITHUB_REF" | awk -F / '{print $3}')"
+        if [[ "${{ github.event_name }}" == "push" ]]; then
+          echo "##[set-output name=xbranch;]$(echo ${GITHUB_REF#refs/heads/})"
+        else
+          echo "##[set-output name=prnum;]1"
+        fi
         echo
         env | sort
         echo "-----------"
