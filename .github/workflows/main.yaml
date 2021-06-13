@@ -12,6 +12,12 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
+    - name: Get Payload Info
+      uses: Dovyski/payload-info-action@master
+      id: payload
+      with:
+        filter_pull_request: '(.head_commit.message | capture("Merge pull request #(?<pr>[[:digit:]]+)").pr)'
+
     - name: Extract PR Info
       shell: bash
       run: |
@@ -21,13 +27,8 @@ jobs:
         echo
         env | sort
         echo "-----------"
+        echo payload is ${{ steps.payload.outputs.value }}
       id: extract_pr
-
-    - name: Get Payload Info
-      uses: Dovyski/payload-info-action@master
-      id: payload
-      with:
-        filter_pull_request: '.'
 
     - name: Find Comment
       uses: peter-evans/find-comment@v1
