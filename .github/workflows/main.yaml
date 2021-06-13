@@ -13,11 +13,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-    - name: Github context
-      shell: bash
-      run: |
-        echo action is ${{ github.action }}
-        echo "github context - ${{ toJSON(github) }}"
+    #- name: Github context
+    #  shell: bash
+    #  run: |
+    #    echo action is ${{ github.action }}
+    #    echo "github context - ${{ toJSON(github) }}"
 
     - name: Get Payload Info
       if: ${{ github.event_name != 'xpush' }}
