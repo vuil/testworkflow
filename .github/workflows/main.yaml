@@ -33,7 +33,8 @@ jobs:
         export PRNUM=$(echo -e "${{ steps.payload.outputs.value }}")
         echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
         echo "##[set-output name=basebranch;]$(echo ${GITHUB_BASE_REF#refs/heads/})"
-        echo ::set-output name=prnum::"$PRNUM"
+        #echo ::set-output name=prnum::"$PRNUM"
+        echo ::set-output name=prnum::${{ steps.payload.outputs.value }}
         echo
         env | sort
         echo "-----------"
