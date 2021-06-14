@@ -18,7 +18,7 @@ jobs:
       id: payload
       with:
         filter_pull_request: '.number'
-        filter_push: '.head_commit.message | capture("Merge pull request #(?<pr>[[:digit:]]+)").pr'
+        filter_push: '.head_commit.message | capture("Merge pull request #(?<pr>[[:digit:]]+)").pr | tonumber'
 
     - name: Extract PR Info
       shell: bash
