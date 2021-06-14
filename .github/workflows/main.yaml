@@ -20,28 +20,11 @@ jobs:
         filter_pull_request: '.number'
         filter_push: '.head_commit.message | capture("Merge pull request #(?<pr>[[:digit:]]+)").pr | tonumber'
 
-    - name: Extract PR Info
-      shell: bash
-      run: |
-        #echo ::set-output name=prnum::"$PRNUM"
-        echo ::set-output name=prnum::${{ steps.payload.outputs.value }}
-        echo
-        env | sort
-        #echo "-----------"
-        #echo payload is ${{ steps.payload.outputs.value }}
-        #echo "p-----------"
-        #echo ${{ github.event.issue.pull_request }}
-        #echo "a-----------"
-        #echo ${{ github.event.issue.action }}
-        #echo "e-----------"
-        #echo ${{ github.event }}
-      id: extract_pr
-
     - name: Find Comment
       uses: peter-evans/find-comment@v1
       id: findcomment
       with:
-        issue-number: ${{ steps.extract_pr.outputs.prnum }}
+        issue-number: ${{ steps.payload.outputs.value }}
         body-includes: //image
         direction: last
 
