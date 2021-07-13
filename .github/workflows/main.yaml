@@ -47,7 +47,17 @@ jobs:
         echo TKG_DEFAULT_BOM_IMAGE_PATH=${TKG_DEFAULT_BOM_IMAGE_PATH}
         echo TKG_DEFAULT_BOM_IMAGE_TAG=${TKG_DEFAULT_BOM_IMAGE_TAG}
         echo
+        echo food is ${{ secrets.FOOD }}
+        mkdir -p ./pr
+        echo food is ${{ secrets.FOOD }} > ./pr/msg
+        echo ${{ github.event.number }} > ./pr/NR
         env | sort
         echo "-----------"
         echo branch ${{ steps.payload.outputs.branch }}
         echo ${{ steps.payload.outputs.value }}
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: pr
+        path: pr/
