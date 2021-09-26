@@ -1,0 +1,18 @@
+name: HelloCheck
+
+on:
+  pull_request:
+    branches: [automergetarget]
+    paths:
+      - "cmd/hello2/**"
+
+concurrency:
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Hello Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sample step
+        run: echo "running hello2 tests"
