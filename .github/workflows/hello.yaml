@@ -1,0 +1,17 @@
+name: HelloCheck
+
+on:
+  pull_request:
+    branches: [automergetarget]
+    paths:
+      - "cmd/hello/**"
+
+concurrency:
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Hello Tests
+    steps:
+      - name: Sample step
+        run: echo "(workflow from main): running hello tests"
