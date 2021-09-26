@@ -16,5 +16,5 @@ func main() {
 	zl := zerolog.New(os.Stderr)
 	var log logr.Logger = zerologr.New(&zl)
 
-	log.Info("Logr in action!", "the answer", 42)
+	log.Info("Logr in action!", "hello2")
 }
