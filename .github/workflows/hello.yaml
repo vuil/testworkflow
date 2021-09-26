@@ -12,6 +12,7 @@ concurrency:
 jobs:
   build:
     name: Hello Tests
+    runs-on: ubuntu-latest
     steps:
       - name: Sample step
         run: echo "running hello tests"
