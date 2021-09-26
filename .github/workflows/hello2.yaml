@@ -12,4 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Sample step
-        run: echo "running hello2 tests"
+        shell: bash
+        run: |
+          sleep 15
+          echo "running hello2 tests"
