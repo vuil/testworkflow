@@ -6,9 +6,6 @@ on:
     paths:
       - "cmd/hello/**"
 
-concurrency:
-  cancel-in-progress: true
-
 jobs:
   build:
     name: Hello Tests
