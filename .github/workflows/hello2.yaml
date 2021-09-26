@@ -1,4 +1,4 @@
-name: HelloCheck
+name: Hello2Check
 
 on:
   pull_request:
@@ -6,12 +6,9 @@ on:
     paths:
       - "cmd/hello2/**"
 
-concurrency:
-  cancel-in-progress: true
-
 jobs:
   build:
-    name: Hello Tests
+    name: Hello2 Tests
     runs-on: ubuntu-latest
     steps:
       - name: Sample step
