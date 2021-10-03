@@ -13,9 +13,9 @@ Example: Created vSphere workload cluster to verify change.
 
 **Special notes for your reviewer**:
 
-**Release note:
+**Release note**:
 <!--
-See [Release Notes](https://github.com/vmware-tanzu/tanzu-framework/blob/main/docs/release/release-notes.md#does-my-pull-request-need-a-release-note)
+See https://github.com/vmware-tanzu/tanzu-framework/blob/main/docs/release/release-notes.md#does-my-pull-request-need-a-release-note
 for more details.
 
 Please add a short text in the release-note block below (or "NONE" if not applicable)
