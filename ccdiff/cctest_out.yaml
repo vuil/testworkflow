@@ -1,0 +1,207 @@
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+kind: DockerCluster
+metadata:
+  annotations:
+    cluster.x-k8s.io/cloned-from-groupkind: DockerClusterTemplate.infrastructure.cluster.x-k8s.io
+    cluster.x-k8s.io/cloned-from-name: clusterclass1-infrastructure-cluster-template
+  labels:
+    cluster.x-k8s.io/cluster-name: my-cluster1
+    topology.cluster.x-k8s.io/owned: ""
+  name: my-cluster1-wzlm6
+  namespace: default
+  resourceVersion: "1"
+spec: {}
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+kind: DockerMachineTemplate
+metadata:
+  annotations:
+    cluster.x-k8s.io/cloned-from-groupkind: DockerMachineTemplate.infrastructure.cluster.x-k8s.io
+    cluster.x-k8s.io/cloned-from-name: clusterclass1-controlplane-machinetemplate
+  labels:
+    cluster.x-k8s.io/cluster-name: my-cluster1
+    topology.cluster.x-k8s.io/owned: ""
+  name: my-cluster1-control-plane-kmpk7
+  namespace: default
+  resourceVersion: "1"
+spec:
+  template:
+    spec: {}
+---
+apiVersion: controlplane.cluster.x-k8s.io/v1beta1
+kind: KubeadmControlPlane
+metadata:
+  annotations:
+    cluster.x-k8s.io/cloned-from-groupkind: KubeadmControlPlaneTemplate.controlplane.cluster.x-k8s.io
+    cluster.x-k8s.io/cloned-from-name: clusterclass1-controlplane-template
+  labels:
+    cluster.x-k8s.io/cluster-name: my-cluster1
+    topology.cluster.x-k8s.io/owned: ""
+  name: my-cluster1-gcv9w
+  namespace: default
+  resourceVersion: "1"
+spec:
+  kubeadmConfigSpec:
+    clusterConfiguration:
+      apiServer:
+        certSANs:
+        - localhost
+        - 127.0.0.1
+        - 0.0.0.0
+      controllerManager:
+        extraArgs:
+          enable-hostpath-provisioner: "true"
+    initConfiguration:
+      nodeRegistration:
+        kubeletExtraArgs:
+          cgroup-driver: cgroupfs
+          eviction-hard: nodefs.available<0%,nodefs.inodesFree<0%,imagefs.available<0%
+    joinConfiguration:
+      nodeRegistration:
+        kubeletExtraArgs:
+          cgroup-driver: cgroupfs
+          eviction-hard: nodefs.available<0%,nodefs.inodesFree<0%,imagefs.available<0%
+  machineTemplate:
+    infrastructureRef:
+      apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+      kind: DockerMachineTemplate
+      name: my-cluster1-control-plane-kmpk7
+      namespace: default
+    metadata:
+      annotations:
+        class: clusterclass1-controlplane-annotation
+      labels:
+        class: clusterclass1-controlplane-label
+        cluster.x-k8s.io/cluster-name: my-cluster1
+        topology.cluster.x-k8s.io/owned: ""
+  replicas: 1
+  version: v1.21.2
+---
+apiVersion: cluster.x-k8s.io/v1beta1
+kind: Cluster
+metadata:
+  creationTimestamp: null
+  labels:
+    cluster.x-k8s.io/cluster-name: my-cluster1
+    cni: kindnet
+    topology.cluster.x-k8s.io/owned: ""
+  name: my-cluster1
+  namespace: default
+  resourceVersion: "1000"
+spec:
+  clusterNetwork:
+    pods:
+      cidrBlocks:
+      - 192.168.0.0/16
+    serviceDomain: cluster.local
+    services:
+      cidrBlocks:
+      - 10.96.0.0/12
+  controlPlaneEndpoint:
+    host: ""
+    port: 0
+  controlPlaneRef:
+    apiVersion: controlplane.cluster.x-k8s.io/v1beta1
+    kind: KubeadmControlPlane
+    name: my-cluster1-gcv9w
+    namespace: default
+  infrastructureRef:
+    apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+    kind: DockerCluster
+    name: my-cluster1-wzlm6
+    namespace: default
+  topology:
+    class: clusterclass1
+    controlPlane:
+      metadata: {}
+      replicas: 1
+    version: v1.21.2
+    workers:
+      machineDeployments:
+      - class: md-class-1
+        metadata: {}
+        name: md1
+        replicas: 1
+status:
+  infrastructureReady: false
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+kind: DockerMachineTemplate
+metadata:
+  annotations:
+    cluster.x-k8s.io/cloned-from-groupkind: DockerMachineTemplate.infrastructure.cluster.x-k8s.io
+    cluster.x-k8s.io/cloned-from-name: clusterclass1-md-class-1-machinetemplate
+  labels:
+    cluster.x-k8s.io/cluster-name: my-cluster1
+    topology.cluster.x-k8s.io/deployment-name: md1
+    topology.cluster.x-k8s.io/owned: ""
+  name: my-cluster1-md1-infra-98mq4
+  namespace: default
+  resourceVersion: "1"
+spec:
+  template:
+    spec: {}
+---
+apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
+kind: KubeadmConfigTemplate
+metadata:
+  annotations:
+    cluster.x-k8s.io/cloned-from-groupkind: KubeadmConfigTemplate.bootstrap.cluster.x-k8s.io
+    cluster.x-k8s.io/cloned-from-name: clusterclass1-md-class-1-bootstraptemplate
+  labels:
+    cluster.x-k8s.io/cluster-name: my-cluster1
+    topology.cluster.x-k8s.io/deployment-name: md1
+    topology.cluster.x-k8s.io/owned: ""
+  name: my-cluster1-md1-bootstrap-sgsdb
+  namespace: default
+  resourceVersion: "1"
+spec:
+  template:
+    spec:
+      joinConfiguration:
+        nodeRegistration:
+          kubeletExtraArgs:
+            cgroup-driver: cgroupfs
+            eviction-hard: nodefs.available<0%,nodefs.inodesFree<0%,imagefs.available<0%
+---
+apiVersion: cluster.x-k8s.io/v1beta1
+kind: MachineDeployment
+metadata:
+  creationTimestamp: null
+  finalizers:
+  - machinedeployment.topology.cluster.x-k8s.io
+  labels:
+    cluster.x-k8s.io/cluster-name: my-cluster1
+    topology.cluster.x-k8s.io/deployment-name: md1
+    topology.cluster.x-k8s.io/owned: ""
+  name: my-cluster1-md1-4frdp
+  namespace: default
+  resourceVersion: "1"
+spec:
+  clusterName: my-cluster1
+  replicas: 1
+  selector: {}
+  template:
+    metadata:
+      annotations:
+        class: clusterclass1-md-class-1-annotation
+      labels:
+        class: clusterclass1-md-class-1-label
+        cluster.x-k8s.io/cluster-name: my-cluster1
+        topology.cluster.x-k8s.io/deployment-name: md1
+        topology.cluster.x-k8s.io/owned: ""
+    spec:
+      bootstrap:
+        configRef:
+          apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
+          kind: KubeadmConfigTemplate
+          name: my-cluster1-md1-bootstrap-sgsdb
+          namespace: default
+      clusterName: my-cluster1
+      infrastructureRef:
+        apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+        kind: DockerMachineTemplate
+        name: my-cluster1-md1-infra-98mq4
+        namespace: default
+      version: v1.21.2
+status: {}
