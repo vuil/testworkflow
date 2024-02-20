@@ -17,4 +17,5 @@ func main() {
 	var log logr.Logger = zerologr.New(&zl)
 
 	log.Info("Logr in action!", "the answer", 42)
+	log.Info("Test merge : msg 1, take 4")
 }
